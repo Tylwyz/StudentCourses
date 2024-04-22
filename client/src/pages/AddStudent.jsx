@@ -1,6 +1,7 @@
 import React from 'react'
 import { useState } from 'react'
 import axios from "axios";
+import { Link, useNavigate } from "react-router-dom";
 
 
 const AddStudent = ()=>{
@@ -13,7 +14,7 @@ const AddStudent = ()=>{
     })
     const [error,setError] = useState(false)
 
-    //const navigate = useNavigate();
+    const navigate = useNavigate();
 
 const handelChange = (e) =>{
     setStudents(prev=>({...prev, [e.target.name]: e.target.value}));
@@ -23,6 +24,7 @@ const handleClick = async e =>{
     e.preventDefault()
     try {
         await axios.post("http://localhost:8800/students", students);
+        navigate("/")
         
     } catch (err) {
         console.log(err);
@@ -40,6 +42,7 @@ console.log(students)
             <input  type="text" placeholder="Student Date of Birth" onChange={handelChange} name="date_of_birth"></input>
             <input  type="email" placeholder="Student email" onChange={handelChange} name="email"></input>
             <button onClick={handleClick}>Add Student </button>
+            {error && "Something went wrong!"}
         </div>
     )
 }

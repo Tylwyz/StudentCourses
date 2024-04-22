@@ -1,4 +1,5 @@
 import React from 'react'
+import { Grid } from "gridjs";
 import { useEffect } from "react";
 import { useState } from "react";
 import axios from "axios";
@@ -21,23 +22,42 @@ const Student = ()=>{
         fetchAllStudents()
     })
 
+    const handleDelete = async (student_id) => {
+      try {
+        await axios.delete(`http://localhost:8800/students/`+student_id);
+        window.location.reload()
+      } catch (err) {
+        console.log(err);
+      }
+    };
+
     return (
 <div>
       <h1>Student List</h1>
       <div className="students">
-        {students.map((students) => (
-          <div key={students.id} className="student">
+
+          <div key={students.student_id} className="student">
             <h2>{students.student_name}</h2>
             <p>{students.date_of_birth}</p>
             <p>{students.email}</p>
+            <button className="delete" onClick={() => handleDelete(students.student_id)}>Delete</button>
+            <button className="update">
+              <Link
+                to={`/updateStudent/${students.student_id}`}
+                style={{ color: "inherit", textDecoration: "none" }}
+              >
+                Update
+              </Link>
+              </button>
           </div>
-        ))}
       </div>
       <button className="AddStudent">
       <Link to="/AddStudent" style={{ color: "inherit", textDecoration: "none" }}>
-          Add new book
+          Add new Student
         </Link>
       </button>
+      <script src="https://unpkg.com/gridjs/dist/gridjs.umd.js"></script>
+      <script src="src/index.js"></script>
     </div>
   );
 };
