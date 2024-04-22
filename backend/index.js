@@ -1,8 +1,12 @@
 import express from 'express'
 import mysql from 'mysql'
 import cors from 'cors'
+import { Grid } from 'gridjs'
+import "gridjs/dist/theme/mermaid.css";
 
 const app = express()
+
+
 
 const db = mysql.createConnection({
     host:"localhost",
@@ -11,6 +15,16 @@ const db = mysql.createConnection({
     database: "studentcourses"
 
 })
+
+
+new gridjs.Grid({
+  columns: ["StudentID", "Student Name", "Date of Birth", "Email"],
+  server:{
+    url: 'http://localhost:8800/students',
+    then: data => data.data.map(students => [students.student_id, students.student_name, students.date_of_birth, students.email])
+  } 
+  
+}).render(document.getElementById("wrapper"));
 
 app.use(express.json())
 app.use(cors("*"))
@@ -32,7 +46,7 @@ app.get("/students", (req,res)=>{
   });
 
   app.post("/students", (req, res) => {
-    const q = "INSERT INTO books(`student_id`, `student_name`, `date_of_birth`, `email`) VALUES (?)";
+    const q = "INSERT INTO students(`student_id`, `student_name`, `date_of_birth`, `email`) VALUES (?)";
   
     const values = [
       req.body.student_id,
@@ -44,6 +58,34 @@ app.get("/students", (req,res)=>{
     db.query(q, [values], (err, data) => {
       if (err) return res.send(err);
       return res.json(data);
+    });
+  });
+
+
+  app.delete("/students/:id", (req, res) => {
+    const studentId = req.params.id;
+    const q = " DELETE FROM students WHERE student_id = ? ";
+  
+    db.query(q, [studentId], (err, data) => {
+      if (err) return res.send(err);
+      return res.json("Student deleted successfully");
+    });
+  });
+
+
+  app.put("/students", (req, res) => {
+    const studentId = req.params.id;
+    const q = " UPDATE students SETS 'student_name'= ?, 'date_of_birth' = ?,'email' = ? WHERE student_id = ? ";
+  
+    const values=[
+      req.body.student_name,
+      req.body.date_of_birth,
+      req.body.email,
+    ]
+
+    db.query(q, [...values, studentId], (err, data) => {
+      if (err) return res.send(err);
+      return res.json("Student updated successfully");
     });
   });
 
