@@ -1,5 +1,4 @@
 import React from 'react'
-import { Grid } from "gridjs";
 import { useEffect } from "react";
 import { useState } from "react";
 import axios from "axios";
@@ -31,12 +30,13 @@ const Student = ()=>{
       }
     };
 
+
     return (
 <div>
       <h1>Student List</h1>
       <div className="students">
-
-          <div key={students.student_id} className="student">
+        {students.map((students) => (
+          <div key={students.id} className="student">
             <h2>{students.student_name}</h2>
             <p>{students.date_of_birth}</p>
             <p>{students.email}</p>
@@ -50,13 +50,13 @@ const Student = ()=>{
               </Link>
               </button>
           </div>
+        ))}
       </div>
       <button className="AddStudent">
       <Link to="/AddStudent" style={{ color: "inherit", textDecoration: "none" }}>
-          Add new Student
+          Add new student
         </Link>
       </button>
-      <script src="https://unpkg.com/gridjs/dist/gridjs.umd.js"></script>
       <script src="src/index.js"></script>
     </div>
   );

@@ -1,8 +1,6 @@
 import express from 'express'
 import mysql from 'mysql'
 import cors from 'cors'
-import { Grid } from 'gridjs'
-import "gridjs/dist/theme/mermaid.css";
 
 const app = express()
 
@@ -17,14 +15,7 @@ const db = mysql.createConnection({
 })
 
 
-new gridjs.Grid({
-  columns: ["StudentID", "Student Name", "Date of Birth", "Email"],
-  server:{
-    url: 'http://localhost:8800/students',
-    then: data => data.data.map(students => [students.student_id, students.student_name, students.date_of_birth, students.email])
-  } 
-  
-}).render(document.getElementById("wrapper"));
+
 
 app.use(express.json())
 app.use(cors("*"))
