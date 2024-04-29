@@ -1,0 +1,28 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model students {
+  student_id    BigInt   @id @unique(map: "student_id") @default(autoincrement()) @db.UnsignedBigInt
+  student_name  String   @db.VarChar(100)
+  date_of_birth DateTime @db.Date
+  email         String   @unique(map: "email") @db.VarChar(100)
+}
+
+model courses {
+  course_id   BigInt @id @unique(map: "course_id") @default(autoincrement()) @db.UnsignedBigInt
+  course_name String @db.VarChar(255)
+  course_code String @unique(map: "course_code") @db.VarChar(20)
+}
+
+model student_courses {
+  student_id Int
+  course_id  Int
+
+  @@id([student_id, course_id])
+}
